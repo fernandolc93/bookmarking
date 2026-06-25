@@ -80,6 +80,14 @@ h1 { border-bottom: 3px solid #f95959; padding-bottom: 0.4rem; }
 }
 [data-testid="stExpander"] summary { color: #e3e3e3 !important; }
 
+/* ── Vertical column headers in AG Grid ── */
+.ag-header-cell-label {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    justify-content: flex-start;
+    padding-top: 8px;
+    white-space: nowrap;
+}
 /* ── Warning / success / error banners ── */
 [data-testid="stAlert"] { border-radius: 8px; }
 
@@ -414,7 +422,7 @@ if uploaded_file:
         )
     gb.configure_grid_options(
         rowHeight=30,
-        headerHeight=120,
+        headerHeight=140,
         suppressRowClickSelection=True,
         suppressCellFocus=True,      # no blue focus border between clicks
     )
