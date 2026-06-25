@@ -10,11 +10,11 @@ env/
 
 # Jupyter
 .ipynb_checkpoints/
+upload_to_github.ipynb
 
 # PDF files (potentially sensitive clinical data - do not commit)
 *.pdf
 *.zip
-
 
 # Excel files with study data
 *.xlsx

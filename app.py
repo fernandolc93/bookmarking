@@ -21,17 +21,78 @@ st.markdown("""
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
 html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 
-.stApp {
-    background-color: #233142;
+/* ── Base ── */
+.stApp { background-color: #233142; }
+
+/* ── All text defaults to light grey ── */
+.stApp, .stApp p, .stApp span, .stApp label,
+.stApp div, .stApp li, .stMarkdown {
     color: #e3e3e3;
 }
 
-h1, h2, h3 { color: #e3e3e3; font-weight: 800; }
-
-/* Accent line under the title */
+/* ── Headings ── */
+h1, h2, h3 { color: #ffffff; font-weight: 800; }
 h1 { border-bottom: 3px solid #f95959; padding-bottom: 0.4rem; }
 
-/* Regular buttons — steel blue with red hover */
+/* ── Subheaders ── */
+.stApp [data-testid="stSubheader"] { color: #f95959; }
+
+/* ── Captions and helper text ── */
+.stApp small, .stApp .stCaption, 
+[data-testid="stCaptionContainer"] { color: #b0bec5 !important; }
+
+/* ── Sidebar ── */
+[data-testid="stSidebar"] { background-color: #1a2639; }
+[data-testid="stSidebar"] * { color: #e3e3e3; }
+
+/* ── Inputs, selects, text areas ── */
+.stTextInput input, .stTextArea textarea,
+[data-baseweb="select"] > div,
+[data-baseweb="input"] > div {
+    background-color: #2e4057 !important;
+    color: #e3e3e3 !important;
+    border-color: #455d7a !important;
+}
+
+/* ── Multiselect tags ── */
+[data-baseweb="tag"] {
+    background-color: #455d7a !important;
+    color: #e3e3e3 !important;
+}
+
+/* ── Dropdown options ── */
+[data-baseweb="popover"] * {
+    background-color: #2e4057 !important;
+    color: #e3e3e3 !important;
+}
+
+/* ── Data editor table ── */
+[data-testid="stDataEditor"] {
+    background-color: #2e4057;
+    color: #e3e3e3;
+}
+
+/* ── Expander ── */
+[data-testid="stExpander"] {
+    background-color: #2e4057;
+    border: 1px solid #455d7a;
+    border-radius: 8px;
+}
+[data-testid="stExpander"] summary { color: #e3e3e3 !important; }
+
+/* ── Warning / success / error banners ── */
+[data-testid="stAlert"] { border-radius: 8px; }
+
+/* ── File uploader ── */
+[data-testid="stFileUploader"] {
+    border: 2px dashed #f95959;
+    border-radius: 8px;
+    padding: 1rem;
+    background-color: #2e4057;
+}
+[data-testid="stFileUploader"] * { color: #e3e3e3 !important; }
+
+/* ── Regular buttons ── */
 div.stButton > button:first-child {
     background: #455d7a;
     color: #e3e3e3; border: none; border-radius: 8px;
@@ -45,7 +106,7 @@ div.stButton > button:first-child:hover {
     color: white;
 }
 
-/* Download button — red accent */
+/* ── Download button ── */
 div.stDownloadButton > button:first-child {
     background: #f95959;
     color: white; border: none; border-radius: 8px;
@@ -58,17 +119,8 @@ div.stDownloadButton > button:first-child:hover {
     color: white;
 }
 
-/* File uploader border */
-[data-testid="stFileUploader"] {
-    border: 2px dashed #f95959;
-    border-radius: 8px;
-    padding: 1rem;
-}
-
-/* Sidebar */
-[data-testid="stSidebar"] {
-    background-color: #455d7a;
-}
+/* ── Divider ── */
+hr { border-color: #455d7a; opacity: 0.4; }
 </style>
 """, unsafe_allow_html=True)
 
