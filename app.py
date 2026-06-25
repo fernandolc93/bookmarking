@@ -15,34 +15,59 @@ if "session_id" not in st.session_state:
 st.set_page_config(page_title="aCRF Bookmarker", layout="wide", page_icon="🔖")
 
 # ── Styling ───────────────────────────────────────────────────────────────────
+
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
 html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
+
 .stApp {
-    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
-    color: #455d7a;
+    background-color: #233142;
+    color: #e3e3e3;
 }
+
 h1, h2, h3 { color: #e3e3e3; font-weight: 800; }
+
+/* Accent line under the title */
+h1 { border-bottom: 3px solid #f95959; padding-bottom: 0.4rem; }
+
+/* Regular buttons — steel blue with red hover */
 div.stButton > button:first-child {
-    background: linear-gradient(90deg, #3b82f6, #8b5cf6);
-    color: white; border: none; border-radius: 8px;
+    background: #455d7a;
+    color: #e3e3e3; border: none; border-radius: 8px;
     padding: 0.5rem 1rem; font-weight: 600;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
 }
 div.stButton > button:first-child:hover {
+    background: #f95959;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4); color: white;
+    box-shadow: 0 4px 12px rgba(249, 89, 89, 0.4);
+    color: white;
 }
+
+/* Download button — red accent */
 div.stDownloadButton > button:first-child {
-    background: linear-gradient(90deg, #10b981, #3b82f6);
+    background: #f95959;
     color: white; border: none; border-radius: 8px;
     padding: 0.5rem 1rem; font-weight: 600;
     transition: transform 0.2s, box-shadow 0.2s;
 }
 div.stDownloadButton > button:first-child:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4); color: white;
+    box-shadow: 0 4px 12px rgba(249, 89, 89, 0.5);
+    color: white;
+}
+
+/* File uploader border */
+[data-testid="stFileUploader"] {
+    border: 2px dashed #f95959;
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+/* Sidebar */
+[data-testid="stSidebar"] {
+    background-color: #455d7a;
 }
 </style>
 """, unsafe_allow_html=True)
