@@ -21,9 +21,9 @@ st.markdown("""
 html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 .stApp {
     background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
-    color: #f8fafc;
+    color: #455d7a;
 }
-h1, h2, h3 { color: #e2e8f0; font-weight: 800; }
+h1, h2, h3 { color: #e3e3e3; font-weight: 800; }
 div.stButton > button:first-child {
     background: linear-gradient(90deg, #3b82f6, #8b5cf6);
     color: white; border: none; border-radius: 8px;
@@ -82,9 +82,9 @@ class CheckboxRenderer {
 }
 """)
 
-st.title("✨ aCRF Automatic Bookmarking")
+st.title("aCRF Automatic Bookmarking")
 st.markdown(
-    "Transform your SAS print output into a fully bookmarked PDF. "
+    "Transform your print output into a fully bookmarked PDF. "
     "Upload your document to extract forms, define the schedule of assessments, "
     "map forms to visits, and download the finished product."
 )
@@ -145,8 +145,6 @@ if uploaded_file:
                 )
             },
         )
-        # Persist edits — we need a clean rerun to sync state properly,
-        # but we defer it to the end of the script to prevent scroll jumps!
         if not edited_forms.equals(st.session_state.edited_forms):
             st.session_state.edited_forms = edited_forms
             st.session_state.needs_rerun = True
@@ -171,7 +169,6 @@ if uploaded_file:
         use_container_width=True,
         key="visits_editor",
     )
-    # Persist edits — defer rerun to end of script to prevent scroll jumps
     if not edited_visits.equals(st.session_state.df_visits):
         st.session_state.df_visits = edited_visits
         st.session_state.needs_rerun = True
@@ -255,7 +252,7 @@ if uploaded_file:
     # ---- Bulk tick / clear ----------------------------------------------
     st.markdown(
         "**Bulk actions** — tick or clear many cells at once (handy for forms "
-        "like *Adverse Event* that apply to almost every visit):"
+        "like that apply to almost every visit):"
     )
     bulk_form_col, bulk_visit_col, bulk_tick_col, bulk_clear_col = st.columns([3, 3, 1, 1])
     with bulk_form_col:
@@ -315,7 +312,7 @@ if uploaded_file:
 
     # ---- AG Grid with native single-click checkboxes --------------------
     st.markdown("Tick the checkboxes to assign forms to visits:")
-    st.caption("💡 Click checkboxes freely — they won't trigger a page reload. "
+    st.caption("💡 Click checkboxes freely"
                "When you're done, click **Save Matrix** below the grid.")
 
     # Pass a clean copy to AG Grid (no internal columns)
