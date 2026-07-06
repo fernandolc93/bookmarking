@@ -80,14 +80,6 @@ h1 { border-bottom: 3px solid #f95959; padding-bottom: 0.4rem; }
 }
 [data-testid="stExpander"] summary { color: #e3e3e3 !important; }
 
-/* ── Vertical column headers in AG Grid ── */
-.ag-header-cell-label {
-    writing-mode: vertical-rl;
-    transform: rotate(180deg);
-    justify-content: flex-start;
-    padding-top: 8px;
-    white-space: nowrap;
-}
 /* ── Warning / success / error banners ── */
 [data-testid="stAlert"] { border-radius: 8px; }
 
@@ -396,6 +388,28 @@ if uploaded_file:
         st.warning(f"{len(empty_visits)} visit(s) have no forms ticked yet: {shown}")
 
     # ---- AG Grid with native single-click checkboxes --------------------
+GRID_CUSTOM_CSS = {
+    # Rotate header text vertically (bottom-to-top)
+    ".ag-header-cell-label": {
+        "writing-mode": "vertical-rl",
+        "transform": "rotate(180deg)",
+        "justify-content": "flex-start",
+        "padding": "8px 0 4px 0",
+        "white-space": "nowrap",
+        "overflow": "visible",
+    },
+    # Let the header cell show the full rotated label
+    ".ag-header-cell": {
+        "overflow": "visible",
+    },
+    # Keep the pinned Form Name header horizontal
+    ".ag-pinned-left-header .ag-header-cell-label": {
+        "writing-mode": "horizontal-tb",
+        "transform": "none",
+        "justify-content": "flex-start",
+        "padding": "0 8px",
+    },
+}
     st.markdown("Tick the checkboxes to assign forms to visits:")
     st.caption("💡 Click checkboxes freely"
                "When you're done, click **Save Matrix** below the grid.")
@@ -422,21 +436,21 @@ if uploaded_file:
         )
     gb.configure_grid_options(
         rowHeight=30,
-        headerHeight=140,
+        headerHeight=150,
         suppressRowClickSelection=True,
         suppressCellFocus=True,      # no blue focus border between clicks
     )
-
     grid_response = AgGrid(
         _clean_matrix,
         gridOptions=gb.build(),
-        update_mode=GridUpdateMode.NO_UPDATE,   # no reruns on click
+        update_mode=GridUpdateMode.NO_UPDATE,
         data_return_mode=DataReturnMode.AS_INPUT,
-        allow_unsafe_jscode=True,    # required for JsCode renderer
+        allow_unsafe_jscode=True,
         fit_columns_on_grid_load=False,
         height=min(60 + 30 * len(form_names), 600),
         theme="alpine",
         key="matrix_grid",
+        custom_css=GRID_CUSTOM_CSS,        # ← add this line
     )
 
     # Commit grid state only when user clicks Save

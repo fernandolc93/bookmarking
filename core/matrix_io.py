@@ -9,6 +9,8 @@ clicking through a 50x40-cell grid in the browser) and bring it back in.
 from io import BytesIO
 
 import openpyxl
+from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+from openpyxl.utils import get_column_letter
 import pandas as pd
 
 TICK_VALUES = {"x", "yes", "y", "1", "true"}
@@ -17,20 +19,90 @@ _SKIP_HEADERS = {"start", "end", "status", "notes", "form_name", "form name"}
 
 def matrix_to_excel_bytes(matrix: pd.DataFrame) -> bytes:
     """
-    Serializes the current matrix to an .xlsx file (form_name + one column
-    per visit, 'x' marking ticked cells) so it can be downloaded, edited in
-    Excel, and re-imported with parse_imported_matrix().
+    Serializes the current matrix to a styled .xlsx file:
+      Row 1 : instructions banner
+      Row 2 : headers (form_name + rotated visit names)
+      Row 3+: one row per form, 'x' marking ticked cells
+    Round-trips with parse_imported_matrix().
     """
     visit_cols = [c for c in matrix.columns if c != "Form Name"]
 
-    out = matrix.copy()
-    for col in visit_cols:
-        out[col] = out[col].apply(lambda v: "x" if bool(v) else "")
-    out = out.rename(columns={"Form Name": "form_name"})
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "Form x Visit Matrix"
+
+    # ── Styles ────────────────────────────────────────────────────────────
+    ts    = Side(style="thin",   color="CCCCCC")
+    ms    = Side(style="medium", color="1F4E79")
+    bdr   = Border(left=ts, right=ts, top=ts, bottom=ts)
+    hbdr  = Border(left=ts, right=ts, top=ts, bottom=ms)
+    h_f   = Font(name="Arial", bold=True, size=9,  color="FFFFFF")
+    b_f   = Font(name="Arial", size=9)
+    x_f   = Font(name="Arial", bold=True, size=11, color="1F4E79")
+    h_fi  = PatternFill("solid", fgColor="1F4E79")
+    v_fi  = PatternFill("solid", fgColor="2E6DA4")
+    y_fi  = PatternFill("solid", fgColor="FFFDE7")
+    l_fi  = PatternFill("solid", fgColor="EBF3FB")
+    ins_f = PatternFill("solid", fgColor="E8F5E9")
+
+    # ── Row 1: instructions ───────────────────────────────────────────────
+    last_col = get_column_letter(1 + len(visit_cols))
+    ws.merge_cells(f"A1:{last_col}1")
+    ws["A1"] = (
+        "INSTRUCTIONS:  Type  x  in a cell to assign that form to that visit.  "
+        "Leave blank to exclude.  Column A is frozen.  "
+        "Save this file when done, then import it back in the app "
+        "(Step 4 → Import / Export)."
+    )
+    ws["A1"].font      = Font(name="Arial", italic=True, size=9, color="2E7D32")
+    ws["A1"].fill      = ins_f
+    ws["A1"].alignment = Alignment(wrap_text=True, vertical="center")
+    ws.row_dimensions[1].height = 36
+
+    # ── Row 2: headers ────────────────────────────────────────────────────
+    c = ws.cell(2, 1, "form_name")
+    c.font = h_f; c.fill = h_fi
+    c.alignment = Alignment(horizontal="center", vertical="bottom")
+    c.border = hbdr
+
+    for vi, visit in enumerate(visit_cols):
+        col = vi + 2
+        c   = ws.cell(2, col, visit)
+        c.font      = Font(name="Arial", bold=True, size=8, color="FFFFFF")
+        c.fill      = v_fi
+        c.alignment = Alignment(horizontal="center", vertical="bottom",
+                                text_rotation=90, wrap_text=False)
+        c.border    = hbdr
+        ws.column_dimensions[get_column_letter(col)].width = 4.0
+
+    ws.row_dimensions[2].height = 100
+
+    # ── Data rows ─────────────────────────────────────────────────────────
+    for fi, (_, mrow) in enumerate(matrix.iterrows()):
+        rn   = fi + 3
+        fill = y_fi if fi % 2 == 0 else l_fi
+
+        ws.cell(rn, 1, str(mrow["Form Name"])).font = b_f
+        ws.cell(rn, 1).alignment = Alignment(vertical="center")
+        ws.cell(rn, 1).fill   = fill
+        ws.cell(rn, 1).border = bdr
+
+        for vi, visit in enumerate(visit_cols):
+            col  = vi + 2
+            val  = mrow[visit]
+            tick = "x" if (val is True or str(val).strip().lower() in ("true", "1", "x")) else ""
+            c = ws.cell(rn, col, tick)
+            c.fill = fill; c.border = bdr
+            c.alignment = Alignment(horizontal="center", vertical="center")
+            c.font = x_f
+
+        ws.row_dimensions[rn].height = 16
+
+    ws.column_dimensions["A"].width = 48
+    ws.freeze_panes = "B3"
 
     buf = BytesIO()
-    with pd.ExcelWriter(buf, engine="openpyxl") as writer:
-        out.to_excel(writer, index=False, sheet_name="Form x Visit Matrix")
+    wb.save(buf)
     return buf.getvalue()
 
 
