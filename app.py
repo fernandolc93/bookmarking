@@ -388,28 +388,28 @@ if uploaded_file:
         st.warning(f"{len(empty_visits)} visit(s) have no forms ticked yet: {shown}")
 
     # ---- AG Grid with native single-click checkboxes --------------------
-GRID_CUSTOM_CSS = {
-    # Rotate header text vertically (bottom-to-top)
-    ".ag-header-cell-label": {
-        "writing-mode": "vertical-rl",
-        "transform": "rotate(180deg)",
-        "justify-content": "flex-start",
-        "padding": "8px 0 4px 0",
-        "white-space": "nowrap",
-        "overflow": "visible",
-    },
-    # Let the header cell show the full rotated label
-    ".ag-header-cell": {
-        "overflow": "visible",
-    },
-    # Keep the pinned Form Name header horizontal
-    ".ag-pinned-left-header .ag-header-cell-label": {
-        "writing-mode": "horizontal-tb",
-        "transform": "none",
-        "justify-content": "flex-start",
-        "padding": "0 8px",
-    },
-}
+    GRID_CUSTOM_CSS = {
+        # Rotate header text vertically (bottom-to-top)
+        ".ag-header-cell-label": {
+            "writing-mode": "vertical-rl",
+            "transform": "rotate(180deg)",
+            "justify-content": "flex-start",
+            "padding": "8px 0 4px 0",
+            "white-space": "nowrap",
+            "overflow": "visible",
+        },
+        # Let the header cell show the full rotated label
+        ".ag-header-cell": {
+            "overflow": "visible",
+        },
+        # Keep the pinned Form Name header horizontal
+        ".ag-pinned-left-header .ag-header-cell-label": {
+            "writing-mode": "horizontal-tb",
+            "transform": "none",
+            "justify-content": "flex-start",
+            "padding": "0 8px",
+        },
+    }
     st.markdown("Tick the checkboxes to assign forms to visits:")
     st.caption("💡 Click checkboxes freely"
                "When you're done, click **Save Matrix** below the grid.")
